@@ -23,5 +23,6 @@ T readPositive(const std::string& prompt, const std::string& errorMessage) {
         std::cout << errorMessage << std::endl;
     }
 }
+int inputIntInRange(const std::string& prompt, int minValue, int maxValue);
 
 #endif

@@ -42,3 +42,24 @@ void PipeManager::editPipe() {
         std::cout << "Труба с ID " << id << " не найдена.\n";
     }
 }
+std::vector<int> PipeManager::searchByName(const std::string& name) const {
+    std::vector<int> foundIds;
+    for (const auto& pair : pipes) {
+        if (pair.second.getName().find(name) != std::string::npos) {
+            foundIds.push_back(pair.first);
+        }
+    }
+    log("Поиск труб по имени '" + name + "': найдено " + std::to_string(foundIds.size()));
+    return foundIds;
+}
+
+std::vector<int> PipeManager::searchByRepairStatus(bool inRepair) const {
+    std::vector<int> foundIds;
+    for (const auto& pair : pipes) {
+        if (pair.second.getUnderRepair() == inRepair) {
+            foundIds.push_back(pair.first);
+        }
+    }
+    log("Поиск труб по статусу ремонта: найдено " + std::to_string(foundIds.size()));
+    return foundIds;
+}

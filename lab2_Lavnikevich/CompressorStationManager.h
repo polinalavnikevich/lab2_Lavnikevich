@@ -14,6 +14,9 @@ public:
     void addStation();
     void displayAllStations() const;
     void editStation();
+    std::vector<int> searchByName(const std::string& name) const;
+    std::vector<int> searchByUnusedPercent(double percent, char op) const;
+
 };
 
 #endif

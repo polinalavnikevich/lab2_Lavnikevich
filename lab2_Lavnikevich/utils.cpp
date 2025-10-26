@@ -8,3 +8,18 @@ void log(const std::string& action) {
         logFile.close();
     }
 }
+int inputIntInRange(const std::string& prompt, int minValue, int maxValue) {
+    int value;
+    while (true) {
+        std::cout << prompt;
+        std::string input;
+        std::getline(std::cin, input);
+        log("¬вод: " + input);
+
+        std::stringstream ss(input);
+        if (ss >> value && value >= minValue && value <= maxValue) {
+            return value;
+        }
+        std::cout << "¬ведите число от " << minValue << " до " << maxValue << ".\n";
+    }
+}

@@ -14,6 +14,8 @@ public:
     void addPipe();
     void displayAllPipes() const;
     void editPipe();
+    std::vector<int> searchByName(const std::string& name) const;
+    std::vector<int> searchByRepairStatus(bool inRepair) const;
 };
 
 #endif
