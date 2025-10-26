@@ -4,8 +4,9 @@
 
 int main() {
     Pipe p;
-    std::cout << "Труба создана: " << p.getName() << std::endl;
-    p.toggleRepair();
-    std::cout << "В ремонте: " << p.getUnderRepair() << std::endl;
+    std::cout << "Введите данные трубы:\n";
+    std::cin >> p;
+    std::cout << p << std::endl;
+
     return 0;
 }
