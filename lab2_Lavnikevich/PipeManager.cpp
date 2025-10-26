@@ -63,3 +63,36 @@ std::vector<int> PipeManager::searchByRepairStatus(bool inRepair) const {
     log("Поиск труб по статусу ремонта: найдено " + std::to_string(foundIds.size()));
     return foundIds;
 }
+void PipeManager::batchEdit(const std::vector<int>& ids) {
+    for (int id : ids) {
+        auto it = pipes.find(id);
+        if (it != pipes.end()) {
+            it->second.toggleRepair();
+        }
+    }
+    std::cout << "Пакетное редактирование завершено.\n";
+    log("Пакетное редактирование " + std::to_string(ids.size()) + " труб");
+}
+
+void PipeManager::batchDelete(const std::vector<int>& ids) {
+    for (int id : ids) {
+        pipes.erase(id);
+    }
+    std::cout << "Пакетное удаление завершено.\n";
+    log("Пакетное удаление " + std::to_string(ids.size()) + " труб");
+}
+void PipeManager::deletePipe() {
+    if (pipes.empty()) {
+        std::cout << "Трубы не добавлены.\n";
+        return;
+    }
+
+    int id = readPositive<int>("Введите ID трубы: ", "Неверный ID");
+    if (pipes.erase(id)) {
+        std::cout << "Труба удалена.\n";
+        log("Удалена труба с ID: " + std::to_string(id));
+    }
+    else {
+        std::cout << "Труба с ID " << id << " не найдена.\n";
+    }
+}

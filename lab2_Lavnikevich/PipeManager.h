@@ -16,6 +16,11 @@ public:
     void editPipe();
     std::vector<int> searchByName(const std::string& name) const;
     std::vector<int> searchByRepairStatus(bool inRepair) const;
+    void batchEdit(const std::vector<int>& ids);
+    void batchDelete(const std::vector<int>& ids);
+    void deletePipe();
+    void saveToFile(const std::string& filename) const;
+    void loadFromFile(const std::string& filename);
 };
 
 #endif

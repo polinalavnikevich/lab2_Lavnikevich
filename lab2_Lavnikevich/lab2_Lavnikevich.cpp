@@ -16,7 +16,8 @@ void displayPipeMenu() {
     std::cout << "1. Добавить трубу\n";
     std::cout << "2. Показать все трубы\n";
     std::cout << "3. Редактировать трубу\n";
-    std::cout << "4. Поиск труб\n";
+    std::cout << "4. Удалить трубу\n";
+    std::cout << "5. Поиск труб\n";
     std::cout << "0. Назад\n";
 }
 
@@ -25,7 +26,8 @@ void displayStationMenu() {
     std::cout << "1. Добавить КС\n";
     std::cout << "2. Показать все КС\n";
     std::cout << "3. Редактировать КС\n";
-    std::cout << "4. Поиск КС\n";
+    std::cout << "4. Удалить КС\n";
+    std::cout << "5. Поиск КС\n";
     std::cout << "0. Назад\n";
 }
 void displaySearchPipeMenu() {
@@ -64,7 +66,24 @@ void handlePipeSearch(PipeManager& pipeManager) {
             foundIds = pipeManager.searchByRepairStatus(statusChoice == 1);
         }
 
+        if (foundIds.empty()) {
+            std::cout << "Трубы не найдены.\n";
+            continue;
+        }
+
         std::cout << "Найдено труб: " << foundIds.size() << std::endl;
+        std::cout << "1. Пакетное редактирование\n";
+        std::cout << "2. Пакетное удаление\n";
+        std::cout << "0. Назад\n";
+
+        int action = inputIntInRange("Выберите действие: ", 0, 2);
+
+        if (action == 1) {
+            pipeManager.batchEdit(foundIds);
+        }
+        else if (action == 2) {
+            pipeManager.batchDelete(foundIds);
+        }
     }
 }
 void handlePipes(PipeManager& pipeManager) {

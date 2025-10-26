@@ -23,6 +23,8 @@ public:
 
     friend std::istream& operator>>(std::istream& in, Pipe& pipe);
     friend std::ostream& operator<<(std::ostream& out, const Pipe& pipe);
+    void load(const std::string& data);
+    std::string save() const;
 };
 
 #endif

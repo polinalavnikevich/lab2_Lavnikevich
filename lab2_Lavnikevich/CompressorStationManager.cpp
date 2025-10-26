@@ -82,3 +82,18 @@ std::vector<int> CompressorStationManager::searchByUnusedPercent(double percent,
     log("Поиск КС по проценту " + std::string(1, op) + " " + std::to_string(percent) + ": найдено " + std::to_string(foundIds.size()));
     return foundIds;
 }
+void CompressorStationManager::deleteStation() {
+    if (stations.empty()) {
+        std::cout << "КС не добавлены.\n";
+        return;
+    }
+
+    int id = readPositive<int>("Введите ID КС: ", "Неверный ID");
+    if (stations.erase(id)) {
+        std::cout << "КС удалена.\n";
+        log("Удалена КС с ID: " + std::to_string(id));
+    }
+    else {
+        std::cout << "КС с ID " << id << " не найдена.\n";
+    }
+}

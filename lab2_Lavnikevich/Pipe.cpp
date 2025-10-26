@@ -33,3 +33,20 @@ std::ostream& operator<<(std::ostream& out, const Pipe& pipe) {
         << ", В ремонте: " << (pipe.underRepair ? "Да" : "Нет");
     return out;
 }
+
+void Pipe::load(const std::string& data) {
+    std::stringstream ss(data);
+    std::string token;
+
+    std::getline(ss, name, ';');
+    std::getline(ss, token, ';');
+    length = std::stod(token);
+    std::getline(ss, token, ';');
+    diameter = std::stoi(token);
+    std::getline(ss, token, ';');
+    underRepair = (token == "1");
+}
+
+std::string Pipe::save() const {
+    return name + ";" + std::to_string(length) + ";" + std::to_string(diameter) + ";" + (underRepair ? "1" : "0");
+}
