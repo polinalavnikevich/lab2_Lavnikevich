@@ -1,25 +1,25 @@
 #include "utils.h"
-#include <fstream>
 
-void log(const std::string& action) {
-    std::ofstream logFile("log.txt", std::ios::app);
+void log(const string& action) {
+    ofstream logFile("log.txt", ios::app);
     if (logFile.is_open()) {
-        logFile << action << std::endl;
+        logFile << action << endl;
         logFile.close();
     }
 }
-int inputIntInRange(const std::string& prompt, int minValue, int maxValue) {
+
+int inputIntInRange(const string& prompt, int minValue, int maxValue) {
     int value;
     while (true) {
-        std::cout << prompt;
-        std::string input;
-        std::getline(std::cin, input);
+        cout << prompt;
+        string input;
+        getline(cin, input);
         log("¬вод: " + input);
 
-        std::stringstream ss(input);
+        stringstream ss(input);
         if (ss >> value && value >= minValue && value <= maxValue) {
             return value;
         }
-        std::cout << "¬ведите число от " << minValue << " до " << maxValue << ".\n";
+        cout << "¬ведите число от " << minValue << " до " << maxValue << ".\n";
     }
 }

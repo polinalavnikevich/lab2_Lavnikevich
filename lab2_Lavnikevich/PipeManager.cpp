@@ -1,98 +1,166 @@
 #include "PipeManager.h"
 #include "utils.h"
-#include <iostream>
+#include <fstream>
 
 void PipeManager::addPipe() {
     Pipe pipe;
-    std::cin >> pipe;
+    cin >> pipe;
 
+    while (pipes.find(nextId) != pipes.end()) {
+        nextId++;
+    }
     pipes[nextId] = pipe;
-    std::cout << "Труба добавлена с ID: " << nextId << std::endl;
-    log("Добавлена труба с ID: " + std::to_string(nextId));
+
+    cout << "Труба добавлена с ID: " << nextId << endl;
+    log("Добавлена труба с ID: " + to_string(nextId));
     nextId++;
 }
 
 void PipeManager::displayAllPipes() const {
     if (pipes.empty()) {
-        std::cout << "Трубы не добавлены.\n";
+        cout << "Трубы не добавлены.\n";
         return;
     }
-
-    std::cout << "Список всех труб:\n";
+    cout << "Список всех труб:\n";
     for (const auto& pair : pipes) {
-        std::cout << "ID " << pair.first << ": " << pair.second << std::endl;
+        cout << "ID " << pair.first << ": " << pair.second << endl;
     }
     log("Показаны все трубы");
 }
 
 void PipeManager::editPipe() {
     if (pipes.empty()) {
-        std::cout << "Трубы не добавлены.\n";
+        cout << "Трубы не добавлены.\n";
         return;
     }
 
     int id = readPositive<int>("Введите ID трубы: ", "Неверный ID");
     auto it = pipes.find(id);
-
     if (it != pipes.end()) {
         it->second.toggleRepair();
-        std::cout << "Статус трубы изменен.\n";
+        cout << "Статус трубы изменен.\n";
     }
     else {
-        std::cout << "Труба с ID " << id << " не найдена.\n";
+        cout << "Труба с ID " << id << " не найдена.\n";
     }
 }
-std::vector<int> PipeManager::searchByName(const std::string& name) const {
-    std::vector<int> foundIds;
+
+void PipeManager::deletePipe() {
+    if (pipes.empty()) {
+        cout << "Трубы не добавлены.\n";
+        return;
+    }
+
+    int id = readPositive<int>("Введите ID трубы: ", "Неверный ID");
+    if (pipes.erase(id)) {
+        cout << "Труба удалена.\n";
+        log("Удалена труба с ID: " + to_string(id));
+    }
+    else {
+        cout << "Труба с ID " << id << " не найдена.\n";
+    }
+}
+
+vector<int> PipeManager::searchByName(const string& name) const {
+    vector<int> foundIds;
     for (const auto& pair : pipes) {
-        if (pair.second.getName().find(name) != std::string::npos) {
+        if (pair.second.getName().find(name) != string::npos) {
             foundIds.push_back(pair.first);
         }
     }
-    log("Поиск труб по имени '" + name + "': найдено " + std::to_string(foundIds.size()));
+    log("Поиск труб по имени '" + name + "': найдено " + to_string(foundIds.size()));
+
+    if (!foundIds.empty()) {
+        cout << "Найденные трубы:\n";
+        for (int id : foundIds) {
+            auto it = pipes.find(id);
+            if (it != pipes.end()) {
+                cout << "ID " << id << ": " << it->second << endl;
+            }
+        }
+    }
+
     return foundIds;
 }
 
-std::vector<int> PipeManager::searchByRepairStatus(bool inRepair) const {
-    std::vector<int> foundIds;
+vector<int> PipeManager::searchByRepairStatus(bool inRepair) const {
+    vector<int> foundIds;
     for (const auto& pair : pipes) {
         if (pair.second.getUnderRepair() == inRepair) {
             foundIds.push_back(pair.first);
         }
     }
-    log("Поиск труб по статусу ремонта: найдено " + std::to_string(foundIds.size()));
+    log("Поиск труб по статусу ремонта: найдено " + to_string(foundIds.size()));
+
+    if (!foundIds.empty()) {
+        cout << "Найденные трубы:\n";
+        for (int id : foundIds) {
+            auto it = pipes.find(id);
+            if (it != pipes.end()) {
+                cout << "ID " << id << ": " << it->second << endl;
+            }
+        }
+    }
+
     return foundIds;
 }
-void PipeManager::batchEdit(const std::vector<int>& ids) {
+
+void PipeManager::batchEdit(const vector<int>& ids) {
     for (int id : ids) {
         auto it = pipes.find(id);
         if (it != pipes.end()) {
             it->second.toggleRepair();
         }
     }
-    std::cout << "Пакетное редактирование завершено.\n";
-    log("Пакетное редактирование " + std::to_string(ids.size()) + " труб");
+    cout << "Пакетное редактирование завершено.\n";
+    log("Пакетное редактирование " + to_string(ids.size()) + " труб");
 }
 
-void PipeManager::batchDelete(const std::vector<int>& ids) {
+void PipeManager::batchDelete(const vector<int>& ids) {
     for (int id : ids) {
         pipes.erase(id);
     }
-    std::cout << "Пакетное удаление завершено.\n";
-    log("Пакетное удаление " + std::to_string(ids.size()) + " труб");
+    cout << "Пакетное удаление завершено.\n";
+    log("Пакетное удаление " + to_string(ids.size()) + " труб");
 }
-void PipeManager::deletePipe() {
-    if (pipes.empty()) {
-        std::cout << "Трубы не добавлены.\n";
+
+void PipeManager::saveToFile(const string& filename) const {
+    ofstream file(filename);
+    if (file.is_open()) {
+        for (const auto& pair : pipes) {
+            file << pair.first << ":" << pair.second.save() << endl;
+        }
+        file.close();
+        cout << "Трубы сохранены в " << filename << endl;
+        log("Сохранение труб в " + filename);
+    }
+    else {
+        cout << "Ошибка сохранения.\n";
+    }
+}
+
+void PipeManager::loadFromFile(const string& filename) {
+    ifstream file(filename);
+    if (!file.is_open()) {
+        cout << "Файл не найден.\n";
         return;
     }
 
-    int id = readPositive<int>("Введите ID трубы: ", "Неверный ID");
-    if (pipes.erase(id)) {
-        std::cout << "Труба удалена.\n";
-        log("Удалена труба с ID: " + std::to_string(id));
+    string line;
+    int count = 0;
+    while (getline(file, line)) {
+        size_t pos = line.find(':');
+        if (pos != string::npos) {
+            int id = stoi(line.substr(0, pos));
+            Pipe pipe;
+            pipe.load(line.substr(pos + 1));
+            pipes[id] = pipe;
+            count++;
+
+            if (id >= nextId) nextId = id + 1;
+        }
     }
-    else {
-        std::cout << "Труба с ID " << id << " не найдена.\n";
-    }
+    file.close();
+    cout << "Загружено труб: " << count << endl;
+    log("Загрузка труб из " + filename + ": " + to_string(count));
 }

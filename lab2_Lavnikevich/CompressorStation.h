@@ -4,22 +4,26 @@
 #include <iostream>
 #include <string>
 
+using namespace std;
+
 class CompressorStation {
 private:
-    std::string name;
+    string name;
     int totalShops;
     int workingShops;
     int efficiency;
 
 public:
     CompressorStation();
-
-    std::string getName() const;
+    string getName() const;
     double getUnusedPercent() const;
     void changeWorkingShops(int change);
 
-    friend std::istream& operator>>(std::istream& in, CompressorStation& cs);
-    friend std::ostream& operator<<(std::ostream& out, const CompressorStation& cs);
+    friend istream& operator>>(istream& in, CompressorStation& cs);
+    friend ostream& operator<<(ostream& out, const CompressorStation& cs);
+
+    void load(const string& data);
+    string save() const;
 };
 
 #endif

@@ -1,28 +1,55 @@
 #ifndef UTILS_H
 #define UTILS_H
 
-#include <string>
 #include <iostream>
+#include <fstream>
+#include <string>
+#include <limits>
 #include <sstream>
+#include <algorithm>
 
-void log(const std::string& action);
+using namespace std;
+
+void log(const string& action);
 
 template <typename T>
-T readPositive(const std::string& prompt, const std::string& errorMessage) {
+T readPositive(const string& prompt, const string& errorMessage) {
     T value;
     while (true) {
-        std::cout << prompt;
-        std::string input;
-        std::getline(std::cin, input);
+        cout << prompt;
+        string input;
+        getline(cin, input);
         log("Ввод: " + input);
 
-        std::stringstream ss(input);
+        if (input.empty()) {
+            cout << "Строка пустая.\n";
+            continue;
+        }
+
+        for (size_t i = 0; i < input.size(); i++) {
+            if (input[i] == ',') input[i] = '.';
+        }
+
+        stringstream ss(input);
         if (ss >> value && value > 0) {
             return value;
         }
-        std::cout << errorMessage << std::endl;
+        cout << errorMessage << endl;
     }
 }
-int inputIntInRange(const std::string& prompt, int minValue, int maxValue);
+
+template <typename T>
+T readPositive(const string& prompt, const string& errorMessage, const T maxValue) {
+    T value;
+    while (true) {
+        value = readPositive<T>(prompt, errorMessage);
+        if (value < maxValue) {
+            return value;
+        }
+        cout << errorMessage << endl;
+    }
+}
+
+int inputIntInRange(const string& prompt, int minValue, int maxValue);
 
 #endif
