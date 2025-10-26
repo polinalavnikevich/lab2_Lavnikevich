@@ -1,12 +1,18 @@
 ﻿#include <iostream>
 #include "utils.h"
-#include "Pipe.h"
+#include "PipeManager.h"
 
 int main() {
-    Pipe p;
-    std::cout << "Введите данные трубы:\n";
-    std::cin >> p;
-    std::cout << p << std::endl;
+
+    PipeManager pm;
+
+    pm.addPipe();
+    pm.addPipe();
+
+    pm.displayAllPipes();
+
+    pm.editPipe();
+    pm.displayAllPipes();
 
     return 0;
 }
