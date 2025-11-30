@@ -105,6 +105,16 @@ vector<int> PipeManager::searchByRepairStatus(bool inRepair) const {
     return foundIds;
 }
 
+vector<int> PipeManager::searchByDiameter(int diameter) const {
+    vector<int> foundIds;
+    for (const auto& pair : pipes) {
+        if (pair.second.getDiameter() == diameter) {
+            foundIds.push_back(pair.first);
+        }
+    }
+    return foundIds;
+}
+
 void PipeManager::batchEdit(const vector<int>& ids) {
     for (int id : ids) {
         auto it = pipes.find(id);
@@ -163,4 +173,12 @@ void PipeManager::loadFromFile(const string& filename) {
     file.close();
     cout << "Загружено труб: " << count << endl;
     log("Загрузка труб из " + filename + ": " + to_string(count));
+}
+
+Pipe PipeManager::getPipeById(int id) const {
+    auto it = pipes.find(id);
+    if (it != pipes.end()) {
+        return it->second;
+    }
+    return Pipe(); // Возвращаем пустую трубу если не найдена
 }
